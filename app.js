@@ -1,6 +1,7 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
 const mongoose = require('mongoose')
 
 const app = express()
@@ -21,6 +22,9 @@ app.engine('handlebars', exphbs({
   defaultLayout: 'main'
 }))
 app.set('view engine', 'handlebars')
+
+//method override middleware
+app.use(methodOverride('_method'))
 
 //Body-Parser Middleware
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -55,6 +59,18 @@ app.get('/ideas/add', (req, res) => {
   res.render('ideas/add')
 })
 
+//Edit Idea Form
+app.get('/ideas/edit/:id', (req, res) => {
+  Idea.findOne({
+    _id: req.params.id
+  })
+  .then(idea => {
+    res.render('ideas/edit', {
+      idea:idea
+    })
+  })
+})
+
 // Process Form
 app.post('/ideas', (req, res) => {
   let errors = []
@@ -81,6 +97,21 @@ app.post('/ideas', (req, res) => {
       res.redirect('/ideas')
     })
   }
+})
+
+//Edit Form
+app.put('/ideas/:id', (req, res) => {
+  Idea.findOne({
+    _id: req.params.id
+  }).then(idea => {
+    //new values
+    idea.title = req.body.title
+    idea.details = req.body.details
+
+    idea.save().then(idea => {
+      res.redirect('/ideas')
+    })
+  })
 })
 
 const port = 5000
