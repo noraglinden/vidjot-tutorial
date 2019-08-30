@@ -7,6 +7,10 @@ app.get('/', (req, res) => {
   res.send('index')
 })
 
+app.get('/about', (req, res) => {
+  res.send('about')
+})
+
 const port = 5000
 
 app.listen(port, () => {
