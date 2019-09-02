@@ -6,6 +6,7 @@ const methodOverride = require('method-override')
 const flash = require('connect-flash')
 const session = require('express-session')
 const mongoose = require('mongoose')
+const passport = require('passport')
 
 const app = express()
 
@@ -13,6 +14,9 @@ const app = express()
 const ideas = require('./routes/ideas')
 const users = require('./routes/users')
 const core = require('./routes/core')
+
+//Passport config
+require('./config/passport')(passport)
 
 // TODO move middleware to own namespace
 //Connect to mongoose
