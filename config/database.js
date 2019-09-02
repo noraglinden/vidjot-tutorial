@@ -1,6 +1,6 @@
 if (process.env.NODE_ENV === 'production') {
   module.exports = {
-    mongoURI: 'mongodb+srv://nora:nora@vidjot-prod-qotco.mongodb.net/test?retryWrites=true&w=majority'
+    mongoURI: 'mongodb://nora:nora@vidjot-prod-qotco.mongodb.net/test?retryWrites=true&w=majority'
   }
 } else {
   module.exports = {
