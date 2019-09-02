@@ -13,6 +13,7 @@ const ideas = require('./routes/ideas')
 const users = require('./routes/users')
 const core = require('./routes/core')
 
+// TODO move middleware to own namespace
 //Connect to mongoose
 mongoose.connect('mongodb://localhost/vidjot-dev', {
   useNewUrlParser: true
