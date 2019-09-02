@@ -1,8 +1,9 @@
 const express = require('express')
 const router = express.Router()
+const {ensureAuthenticated} = require('../utils/auth')
 
 //Index Route
-router.get('/', (req, res) => {
+router.get('/', ensureAuthenticated, (req, res) => {
   const title = 'Welcome'
   res.render('index', {
     title: title
