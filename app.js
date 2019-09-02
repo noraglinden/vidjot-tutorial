@@ -137,7 +137,7 @@ app.put('/ideas/:id', (req, res) => {
 
 //Delete Idea
 app.delete('/ideas/:id', (req, res) => {
-  Idea.remove({
+  Idea.deleteOne({
     _id: req.params.id
   })
   .then(() => {
