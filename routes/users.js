@@ -1,6 +1,12 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const passport = require('passport')
 const router = express.Router()
+
+// Load User Model
+require('../models/User')
+const User = mongoose.model('users')
 
 //User Login Route
 router.get('/login', (req, res) => {
@@ -14,26 +20,62 @@ router.get('/register', (req, res) => {
 
 //Register Form POST
 router.post('/register', (req, res) => {
+  var requestName = req.body.name
+  var requestEmail = req.body.email
+  var requestPassword = req.body.password
+  var requestPasswordValid = req.body.confirmedPassword
+
   let errors = []
 
-  if(req.body.password != req.body.confirmedPassword){
-    errors.push({text: 'Passwords do not match.'})
+  if (requestPassword != requestPasswordValid) {
+    errors.push({ text: 'Passwords do not match.' })
   }
 
-  if(req.body.password.length < 4){
-    errors.push({text: 'Password must be at least 4 characters.'})
+  if (requestPassword.length < 4) {
+    errors.push({ text: 'Password must be at least 4 characters.' })
   }
 
-  if(errors.length > 0){
+  if (errors.length > 0) {
     res.render('users/register', {
       errors: errors,
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-      confirmedPassword: req.body.confirmedPassword
+      name: requestName,
+      email: requestEmail,
+      password: requestPassword,
+      confirmedPassword: requestPasswordValid
     })
   } else {
-    res.send('passed')
+    User.findOne({email: requestEmail})
+      .then(user => {
+        if (user) {
+          req.flash('error_msg', 'Email already registered.')
+          res.redirect('/users/register')
+        }
+        else {
+          bcrypt.genSalt(10, (error, salt) => {
+            bcrypt.hash(requestPassword, salt, (err, hash) => {
+              if (err) throw err
+              const newUser = new User({
+                name: requestName,
+                email: requestEmail,
+                password: hash
+              })
+              newUser.save()
+              .then(user => {
+                req.flash('success_msg', "You are now registerd and can log in")
+                res.redirect('/users/login')
+              })
+              .catch(err => {
+                console.log(err)
+                return;
+              })
+            })
+          })
+        }
+      })
+      .catch(err => {
+        console.log(err)
+        return;
+      })
   }
 })
 
