@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
@@ -46,6 +47,9 @@ app.use(function(req, res, next){
   res.locals.error = req.flash('error')
   next()
 })
+
+// Static Folder
+app.use(express.static(path.join(__dirname, 'public')))
 
 //Body-Parser Middleware
 app.use(bodyParser.urlencoded({ extended: false }))
