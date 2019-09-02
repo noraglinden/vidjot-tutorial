@@ -44,7 +44,7 @@ router.post('/register', (req, res) => {
       confirmedPassword: requestPasswordValid
     })
   } else {
-    User.findOne({email: requestEmail})
+    User.findOne({ email: requestEmail })
       .then(user => {
         if (user) {
           req.flash('error_msg', 'Email already registered.')
@@ -60,14 +60,14 @@ router.post('/register', (req, res) => {
                 password: hash
               })
               newUser.save()
-              .then(user => {
-                req.flash('success_msg', "You are now registerd and can log in")
-                res.redirect('/users/login')
-              })
-              .catch(err => {
-                console.log(err)
-                return;
-              })
+                .then(user => {
+                  req.flash('success_msg', "You are now registerd and can log in")
+                  res.redirect('/users/login')
+                })
+                .catch(err => {
+                  console.log(err)
+                  return;
+                })
             })
           })
         }
