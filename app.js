@@ -18,9 +18,11 @@ const core = require('./routes/core')
 //Passport config
 require('./config/passport')(passport)
 
+const db = require('./config/database')
+
 // TODO move middleware to own namespace
 //Connect to mongoose
-mongoose.connect('mongodb://localhost/vidjot-dev', {
+mongoose.connect(db.mongoURI, {
   useNewUrlParser: true
 })
   .then(() => { console.log('MongoDB connected...') })
@@ -49,7 +51,7 @@ app.use(passport.session());
 app.use(flash())
 
 //global variables
-app.use(function(req, res, next){
+app.use(function (req, res, next) {
   res.locals.success_msg = req.flash('success_msg')
   res.locals.error_msg = req.flash('error_msg')
   res.locals.error = req.flash('error')
@@ -69,7 +71,7 @@ app.use('/ideas', ideas)
 app.use('/users', users)
 app.use('/', core)
 
-const port = 5000
+const port = process.env.PORT || 5000
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`)
