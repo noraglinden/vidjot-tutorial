@@ -14,6 +14,7 @@ const app = express()
 const ideas = require('./routes/ideas')
 const users = require('./routes/users')
 const core = require('./routes/core')
+const auth = require('./routes/auth')
 
 //Passport config
 require('./config/passport')(passport)
@@ -69,6 +70,7 @@ app.use(bodyParser.json())
 //Use Routes
 app.use('/ideas', ideas)
 app.use('/users', users)
+app.use('/auth', auth)
 app.use('/', core)
 
 const port = process.env.PORT || 5000
